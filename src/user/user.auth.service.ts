@@ -43,8 +43,17 @@ export class UserAuthService {
             });
         }
         else {
-            // TODO: Redis 붙여서 세션 저장
-            return new SessionResponseDTO(sessionId, user.userId);
+            if(user.userId === signinDto.id && user.password === signinDto.password) {
+                 // TODO: Redis 붙여서 세션 저장
+                return new SessionResponseDTO(sessionId, user.userId);
+            }
+            else {
+                throw new APIHandleException({
+                    error: 'USER_AUTHENTICATION_ERROR',
+                    message: ['아이디와 비밀번호를 다시 확인해주세요.'],
+                    statusCode: HttpStatus.UNAUTHORIZED
+                });
+            }
         }
     }
 
