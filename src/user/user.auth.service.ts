@@ -43,7 +43,7 @@ export class UserAuthService {
             });
         }
         else {
-            // TODO: Redis 
+            // TODO: Redis 붙여서 세션 저장
             return new SessionResponseDTO(sessionId, user.userId);
         }
     }
