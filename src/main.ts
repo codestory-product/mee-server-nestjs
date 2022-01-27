@@ -1,11 +1,20 @@
 import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import * as session from 'express-session';
 import { AppModule } from './app.module';
 import { ApiErrorFilter } from './error/error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const httpAdapter = app.get(HttpAdapterHost);
+
+  app.use(
+    session({
+      secret: 'mee-session-secret!@!',
+      resave: false,
+      saveUninitialized: false
+    })
+  );
 
   app.useGlobalFilters(new ApiErrorFilter(httpAdapter));
 
