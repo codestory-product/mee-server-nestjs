@@ -3,15 +3,23 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AppLoggerMiddleware } from './applogger.middleware';
 import configuration from './config/configuration';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
-
-console.log(process.env.DATABASE_HOST);
+import { AllowRequestConfiguration } from './security/allow.security';
+import { SecurityMiddleware } from './security/security.middleware';
+import { CacheModule } from '@nestjs/common';
+import { ShopModule } from './shop/shop.module';
+import * as redisStore from "cache-manager-redis-store";
+import { UserItem } from './user/user.item.entity';
 
 @Module({
   imports: [
+    CacheModule.register({
+      store: redisStore,
+      host: 'localhost',
+      port: 6379
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -28,21 +36,23 @@ console.log(process.env.DATABASE_HOST);
         username:  configService.get('database.user'),
         database:  configService.get('database.name'),
         password:  configService.get('database.password'),
-        entities: [User],
+        entities: [User, UserItem],
         synchronize: true
       })
     }),
 
-    UserModule
+    UserModule,
+
+    ShopModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AllowRequestConfiguration],
 })
 export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
       consumer
-        .apply(AppLoggerMiddleware)
+        .apply(SecurityMiddleware)
         .forRoutes('*')
   }
 

@@ -7,12 +7,18 @@ import { SigninDTO } from "./dto/signin-user.dto";
 import { SessionResponseDTO } from "./dto/user-session.dto";
 import { User } from "./user.entity";
 import { UserRepository } from "./user.repository";
+import { Inject } from "@nestjs/common";
+import { CACHE_MANAGER } from "@nestjs/common";
+import { Cache } from "cache-manager";
 
 @Injectable()
 export class UserAuthService {
 
     constructor(
-        private readonly userRepository: UserRepository
+        private readonly userRepository: UserRepository,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache
     ) {}
 
     async createUser(createUserDto: CreateUserDTO) {        
@@ -25,7 +31,7 @@ export class UserAuthService {
         }
         else {
             const newUser: User = await this.userRepository.save(
-                new User(createUserDto.id, createUserDto.password, createUserDto.username)
+                new User(createUserDto.id, createUserDto.password, createUserDto.username, 0, [])
             );
             
             return new CreateUserResponseDTO(newUser.userId, newUser.username);
@@ -45,6 +51,8 @@ export class UserAuthService {
         else {
             if(user.userId === signinDto.id && user.password === signinDto.password) {
                  // TODO: Redis 붙여서 세션 저장
+                const str = await this.cacheManager.set(sessionId, user.userId);
+                console.log(str);
                 return new SessionResponseDTO(sessionId, user.userId);
             }
             else {
