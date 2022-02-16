@@ -6,6 +6,10 @@ import { UserRepository } from "./user.repository";
 import { Cache } from "cache-manager";
 import { User } from "./user.entity";
 import { UserItemRepository } from "./user.item.repository";
+import { UserInformation } from "./dto/user-information.dto";
+import { UserEquipItemDto } from "./dto/user-equip-iterm.dto";
+import { UserEquipment } from "./user.equipment.entity";
+import { UserEquipmentRepository } from "./user.equip.repository";
 
 @Injectable()
 export class UserService {
@@ -13,6 +17,7 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly userItemRepository: UserItemRepository,
+        private readonly userEquipmentRepository: UserEquipmentRepository, 
 
         @Inject(CACHE_MANAGER)
         private readonly cacheManager: Cache
@@ -30,6 +35,21 @@ export class UserService {
         }
         
         return user;
+    }
+
+    // 장비 착용
+    async equipment(userEquipmentDto: UserEquipItemDto) {
+        const user = await this.getUser(userEquipmentDto.username);
+        user.equipmentBody = userEquipmentDto.itemBody;
+        user.equipmentHair = userEquipmentDto.itemHair;
+        
+        await this.userRepository.save(user);
+    }
+
+    async getUserInfo(username: string) {
+        const user = await this.getUser(username);
+
+        return new UserInformation(user.userItems, user.money, user.equipmentBody, user.equipmentHair);
     }
 
     async getUserItems(username: string, itemType: string) {

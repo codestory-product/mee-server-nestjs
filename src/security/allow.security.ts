@@ -10,7 +10,8 @@ export class AllowRequestConfiguration {
         this.allowed = new Map<string, string>();
 
         this.allow('/user/authentication/signin')
-            .allow('/user/authentication/signup');
+            .allow('/user/authentication/signup')
+            .allow('/shop/buy')
     }
     
     allow(allowReqUrl: string): AllowRequestConfiguration {

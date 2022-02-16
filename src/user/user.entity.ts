@@ -1,4 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { UserEquipment } from "./user.equipment.entity";
 import { UserItem } from "./user.item.entity";
 
 @Entity()
@@ -28,6 +29,18 @@ export class User {
         name: 'money'
     })
     money: number;
+
+    @Column({
+        type: 'text',
+        name: 'equipmentBody'
+    })
+    equipmentBody: string;
+
+    @Column({
+        type: 'text',
+        name: 'equipmentHair'
+    })
+    equipmentHair: string;
 
     @OneToMany((type) => UserItem, (userItem) => userItem.user)
     userItems: UserItem[];

@@ -12,6 +12,7 @@ import { CacheModule } from '@nestjs/common';
 import { ShopModule } from './shop/shop.module';
 import * as redisStore from "cache-manager-redis-store";
 import { UserItem } from './user/user.item.entity';
+import { UserEquipment } from './user/user.equipment.entity';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { UserItem } from './user/user.item.entity';
         username:  configService.get('database.user'),
         database:  configService.get('database.name'),
         password:  configService.get('database.password'),
-        entities: [User, UserItem],
+        entities: [User, UserItem, UserEquipment],
         synchronize: true
       })
     }),

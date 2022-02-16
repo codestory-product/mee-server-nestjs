@@ -11,7 +11,6 @@ export class UserAuthenticationController {
 
     constructor(
         private readonly userAuthService: UserAuthService,
-        private readonly userService : UserService
     ) {}
 
     @Post('signup')
@@ -23,10 +22,5 @@ export class UserAuthenticationController {
     async signin(@Req() request: Request, @Body() signinDto: SigninDTO) {
         return await this.userAuthService.signin(signinDto, request.sessionID);
     }
-
-    @Get('items/:username')
-    async getUserItems(@Param("username") username: string, @Query("item_types") itemType: string) {
-        return await this.userService.getUserItems(username, itemType);
-    } 
-
+ 
 }
