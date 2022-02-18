@@ -31,7 +31,7 @@ export class UserAuthService {
         }
         else {
             const newUser: User = await this.userRepository.save(
-                new User(createUserDto.id, createUserDto.password, createUserDto.username, 0, [])
+                new User(createUserDto.id, createUserDto.password, createUserDto.username, 10000, [])
             );
             
             return new CreateUserResponseDTO(newUser.userId, newUser.username);

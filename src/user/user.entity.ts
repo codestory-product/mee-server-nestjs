@@ -51,6 +51,8 @@ export class User {
         this.username = username;
         this.money = money;
         this.userItems = userItems;
+        this.equipmentBody = "item0";
+        this.equipmentHair = "item10";
     }
     
 }
