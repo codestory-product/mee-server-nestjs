@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { UserEquipment } from "./user.equipment.entity";
 import { UserItem } from "./user.item.entity";
+import { UserScore } from "./user.score.entity";
 
 @Entity()
 export class User { 
@@ -44,6 +45,9 @@ export class User {
 
     @OneToMany((type) => UserItem, (userItem) => userItem.user)
     userItems: UserItem[];
+
+    @OneToMany((type) => UserScore, (userScore) => userScore.user)
+    userScores: UserScore[];
 
     constructor(userId: string, password: string, username: string, money: number, userItems: UserItem[]) {
         this.userId = userId;

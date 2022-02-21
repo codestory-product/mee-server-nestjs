@@ -12,6 +12,8 @@ import { UserItem } from './user.item.entity';
 import { UserItemRepository } from './user.item.repository';
 import { UserEquipment } from './user.equipment.entity';
 import { UserEquipmentRepository } from './user.equip.repository';
+import { UserScore } from './user.score.entity';
+import { UserScoreRepository } from './user.score.repository';
 // nest g mo user
 
 @Module({
@@ -21,7 +23,7 @@ import { UserEquipmentRepository } from './user.equip.repository';
             host: '127.0.0.1',
             port: 6379
           }),
-        TypeOrmModule.forFeature([User, UserRepository, UserItem, UserItemRepository, UserEquipment, UserEquipmentRepository])
+        TypeOrmModule.forFeature([User, UserRepository, UserItem, UserItemRepository, UserEquipment, UserEquipmentRepository, UserScore, UserScoreRepository])
     ],
     controllers: [UserAuthenticationController, UserController],
     providers: [UserAuthService, UserService],

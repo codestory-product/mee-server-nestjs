@@ -5,7 +5,7 @@ import { User } from "./user.entity";
 export class UserRepository extends Repository<User> {
 
     async findOneByUserId(userId: string) {
-        const user = await this.findOne({ userId: userId }, {relations: ["userItems"]});
+        const user = await this.findOne({ userId: userId }, {relations: ["userItems", "userScores"]});
 
         if(!user) {
             return undefined;

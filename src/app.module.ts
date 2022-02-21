@@ -13,6 +13,7 @@ import { ShopModule } from './shop/shop.module';
 import * as redisStore from "cache-manager-redis-store";
 import { UserItem } from './user/user.item.entity';
 import { UserEquipment } from './user/user.equipment.entity';
+import { UserScore } from './user/user.score.entity';
 
 @Module({
   imports: [
@@ -37,7 +38,7 @@ import { UserEquipment } from './user/user.equipment.entity';
         username:  configService.get('database.user'),
         database:  configService.get('database.name'),
         password:  configService.get('database.password'),
-        entities: [User, UserItem, UserEquipment],
+        entities: [User, UserItem, UserEquipment, UserScore],
         synchronize: true
       })
     }),

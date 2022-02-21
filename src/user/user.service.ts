@@ -10,6 +10,9 @@ import { UserInformation } from "./dto/user-information.dto";
 import { UserEquipItemDto } from "./dto/user-equip-iterm.dto";
 import { UserEquipment } from "./user.equipment.entity";
 import { UserEquipmentRepository } from "./user.equip.repository";
+import { UserScoreRepository } from "./user.score.repository";
+import { UserMinigameGameDTO } from "./dto/user-finished-game.dto";
+import { UserScore } from "./user.score.entity";
 
 @Injectable()
 export class UserService {
@@ -17,7 +20,8 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly userItemRepository: UserItemRepository,
-        private readonly userEquipmentRepository: UserEquipmentRepository, 
+        private readonly userEquipmentRepository: UserEquipmentRepository,
+        private readonly userScoreRepository: UserScoreRepository,
 
         @Inject(CACHE_MANAGER)
         private readonly cacheManager: Cache
@@ -35,6 +39,55 @@ export class UserService {
         }
         
         return user;
+    }
+
+    async saveUserMinigameData(userMiniGameData: UserMinigameGameDTO) {
+        const user = await this.getUser(userMiniGameData.userId);
+
+        if(user.userScores === undefined) {
+            user.userScores = [];
+        }
+
+        user.money += userMiniGameData.money;
+        let newUserScoreEntity = new UserScore(userMiniGameData.score, user);
+
+        if(user.userScores.length >= 5) {
+            const sorted: UserScore[] = user.userScores.sort(function(a, b) { return b.score - a.score });
+
+            // 매우 간단한 그리디 알고리즘
+            for(let i = 0; i < sorted.length; i++) {
+                // 기존에 있던 스코어가 새로 들어온 스코어보다 작다면 세대교체
+                if(sorted[i].score < newUserScoreEntity.score) {
+                    newUserScoreEntity = await this.userScoreRepository.save(newUserScoreEntity);
+                    sorted[i] = newUserScoreEntity;
+                    break;
+                }
+            }
+        }
+        else {
+            await this.userScoreRepository.save(newUserScoreEntity);
+            user.userScores.push(newUserScoreEntity);
+        }
+
+        await this.userRepository.save(user);
+    }
+
+    async getRankings(amountOfViewData: number) {
+        return await this.userRepository
+                            .createQueryBuilder('user')
+                            .leftJoinAndSelect('user.userScores', 's', 's.userUserId = user.userId')
+                            .select('user.userId, s.score')
+                            .orderBy('s.score', 'DESC')
+                            .take(amountOfViewData)
+                            .getRawMany();
+                            
+    }
+    
+    async getUserScores(userId: string) {
+        const user = await this.getUser(userId);
+        console.log(user);
+
+        return user.userScores;
     }
 
     // 장비 착용
