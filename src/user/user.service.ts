@@ -79,7 +79,7 @@ export class UserService {
                             .select('user.userId, s.score')
                             .orderBy('s.score', 'DESC')
                             .offset(0)
-                            .limit(amountOfViewData + 1)
+                            .limit(amountOfViewData)
                             .getRawMany();
                             
     }
