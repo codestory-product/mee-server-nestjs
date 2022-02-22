@@ -78,7 +78,8 @@ export class UserService {
                             .leftJoinAndSelect('user.userScores', 's', 's.userUserId = user.userId')
                             .select('user.userId, s.score')
                             .orderBy('s.score', 'DESC')
-                            .take(amountOfViewData)
+                            .offset(0)
+                            .limit(amountOfViewData + 1)
                             .getRawMany();
                             
     }
