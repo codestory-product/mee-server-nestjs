@@ -13,6 +13,7 @@ import { UserEquipmentRepository } from "./user.equip.repository";
 import { UserScoreRepository } from "./user.score.repository";
 import { UserMinigameGameDTO } from "./dto/user-finished-game.dto";
 import { UserScore } from "./user.score.entity";
+import { RankingResponseDTO } from "./dto/ranking.dto";
 
 @Injectable()
 export class UserService {
@@ -73,14 +74,14 @@ export class UserService {
     }
 
     async getRankings(amountOfViewData: number) {
-        return await this.userRepository
+        return new RankingResponseDTO(await this.userRepository
                             .createQueryBuilder('user')
                             .leftJoinAndSelect('user.userScores', 's', 's.userUserId = user.userId')
                             .select('user.userId, s.score')
                             .orderBy('s.score', 'DESC')
                             .offset(0)
                             .limit(amountOfViewData)
-                            .getRawMany();
+                            .getRawMany());
                             
     }
     
