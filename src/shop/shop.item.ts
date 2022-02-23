@@ -1,26 +1,26 @@
 const BODY_ITEMS = {
     'item0': 0,
-    'item1': 0,
-    'item2': 0,
-    'item3': 0,
-    'item4': 0,
-    'item5': 0,
-    'item6': 0,
-    'item7': 0,
-    'item8': 0,
-    'item9': 0
+    'item1': 1000,
+    'item2': 3000,
+    'item3': 4000,
+    'item4': 8000,
+    'item5': 3000,
+    'item6': 2000,
+    'item7': 1000,
+    'item8': 2000,
+    'item9': 1000
 };
 
 const HAIR_ITEMS = {
     'item10': 0,
-    'item11': 0,
-    'item12': 0,
-    'item13': 0,
-    'item14': 0,
-    'item15': 0,
-    'item16': 0,
-    'item17': 0,
-    'item18': 0
+    'item11': 2000,
+    'item12': 3000,
+    'item13': 3000,
+    'item14': 5000,
+    'item15': 6000,
+    'item16': 8000,
+    'item17': 8000,
+    'item18': 8000
 }
 
 function foundItemPrice(itemName: string, itemType: string): number {
